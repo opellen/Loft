@@ -79,7 +79,7 @@ export class DriveClient {
     if (res.status < 200 || res.status >= 300) {
       throw new Error(`Upload failed (${res.status}): ${res.text}`);
     }
-    return { id: res.json.id };
+    return { id: (res.json as { id: string }).id };
   }
 
   /**

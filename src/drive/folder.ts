@@ -32,7 +32,7 @@ export async function folderExists(
   if (res.status === 401) throw new UnauthorizedError();
   if (res.status === 404) return false;
   if (!isOk(res.status)) return false;
-  return res.json?.mimeType === FOLDER_MIME;
+  return (res.json as { mimeType?: string })?.mimeType === FOLDER_MIME;
 }
 
 /**
@@ -64,7 +64,7 @@ export async function findFolderByName(
   if (!isOk(res.status)) {
     throw new Error(`Folder search failed (${res.status}): ${res.text}`);
   }
-  const files: { id: string }[] = res.json?.files ?? [];
+  const files = (res.json as { files?: Array<{ id: string; name?: string }> })?.files ?? [];
   return files.length > 0 ? files[0].id : null;
 }
 
@@ -96,7 +96,7 @@ export async function createFolder(
   if (!isOk(res.status)) {
     throw new Error(`Folder create failed (${res.status}): ${res.text}`);
   }
-  return res.json.id;
+  return (res.json as { id: string }).id;
 }
 
 /**

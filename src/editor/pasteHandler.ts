@@ -38,27 +38,40 @@ export function registerImageUploadHandlers(plugin: DriveImagesPlugin): void {
   plugin.registerEvent(
     workspace.on('editor-paste', (evt, editor, info) => {
       if (evt.defaultPrevented) return;
-      handleFiles(plugin, evt, editor, info, evt.clipboardData?.files);
+      const imgs = imagesToHandle(plugin, evt.clipboardData?.files);
+      if (!imgs) return; // nothing to do — let Obsidian handle it
+      // We are handling this event ourselves.
+      evt.preventDefault();
+      startUploads(plugin, editor, info, imgs);
     }),
   );
 
   plugin.registerEvent(
     workspace.on('editor-drop', (evt, editor, info) => {
       if (evt.defaultPrevented) return;
-      handleFiles(plugin, evt, editor, info, evt.dataTransfer?.files);
+      const imgs = imagesToHandle(plugin, evt.dataTransfer?.files);
+      if (!imgs) return; // nothing to do — let Obsidian handle it
+      // We are handling this event ourselves.
+      evt.preventDefault();
+      startUploads(plugin, editor, info, imgs);
     }),
   );
 }
 
-function handleFiles(
+/**
+ * Synchronous decision step: pick image files from the event and confirm the
+ * plugin is ready to upload. Returns the images to handle, or `null` when the
+ * caller should NOT preventDefault (no images, or not signed in / no folder).
+ * Shows the one-time readiness Notice when images are present but setup is
+ * incomplete. Deliberately does NOT call `evt.preventDefault()` — the handler
+ * callbacks do that themselves, only when this returns images.
+ */
+function imagesToHandle(
   plugin: DriveImagesPlugin,
-  evt: ClipboardEvent | DragEvent,
-  editor: Editor,
-  info: MarkdownView | MarkdownFileInfo,
   list: FileList | null | undefined,
-): void {
+): File[] | null {
   const imgs = pickImageFiles(list);
-  if (imgs.length === 0) return; // no images — let Obsidian handle it
+  if (imgs.length === 0) return null; // no images — let Obsidian handle it
 
   const { settings } = plugin;
   // Readiness guard: only intercept once we can actually upload. Otherwise let
@@ -68,12 +81,19 @@ function handleFiles(
       readinessNoticeShown = true;
       new Notice('Drive Images: sign in and set a folder name in settings to enable Drive upload');
     }
-    return;
+    return null;
   }
 
-  // We are handling this event ourselves.
-  evt.preventDefault();
+  return imgs;
+}
 
+/** Kick off a per-file async upload for each picked image. */
+function startUploads(
+  plugin: DriveImagesPlugin,
+  editor: Editor,
+  info: MarkdownView | MarkdownFileInfo,
+  imgs: File[],
+): void {
   const sourceFile: TFile | null = info.file ?? null;
   for (const file of imgs) {
     void processOne(plugin, editor, sourceFile, file);

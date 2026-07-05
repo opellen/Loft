@@ -268,7 +268,7 @@ function buildHeaders(
 }
 
 // requestUrl exposes `.json` but throws if the body is not JSON; guard it.
-function safeJson(res: { text: string }): any {
+function safeJson(res: { text: string }): unknown {
   try {
     return JSON.parse(res.text);
   } catch {

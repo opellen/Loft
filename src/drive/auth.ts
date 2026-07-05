@@ -9,6 +9,15 @@ const FORM_CT = 'application/x-www-form-urlencoded';
 /** Delay helper; injectable so tests run without real timers. */
 export type DelayFn = (ms: number) => Promise<void>;
 
+/** Minimal shape of Google's OAuth token endpoint JSON (success or error). */
+interface TokenResponse {
+  access_token?: string;
+  refresh_token?: string;
+  expires_in?: number;
+  error?: string;
+  error_description?: string;
+}
+
 const realDelay: DelayFn = (ms) => new Promise((r) => window.setTimeout(r, ms));
 
 function form(params: Record<string, string>): string {
@@ -40,7 +49,21 @@ export class DeviceFlowAuth {
     if (res.status < 200 || res.status >= 300) {
       throw new Error(`device/code failed (${res.status}): ${res.text}`);
     }
-    return res.json as DeviceCodeResponse;
+    const raw = res.json as {
+      device_code: string;
+      user_code: string;
+      verification_url?: string;
+      verification_uri?: string;
+      interval?: number;
+      expires_in?: number;
+    };
+    return {
+      device_code: raw.device_code,
+      user_code: raw.user_code,
+      verification_url: raw.verification_url ?? raw.verification_uri ?? '',
+      interval: raw.interval ?? 5,
+      expires_in: raw.expires_in ?? 0,
+    };
   }
 
   /**
@@ -77,7 +100,7 @@ export class DeviceFlowAuth {
         }),
       });
 
-      const body = res.json ?? {};
+      const body = (res.json ?? {}) as TokenResponse;
 
       if (res.status >= 200 && res.status < 300 && body.access_token) {
         return this.toTokenSet(body, '');
@@ -117,15 +140,16 @@ export class DeviceFlowAuth {
         client_secret: this.clientSecret,
       }),
     });
-    if (res.status < 200 || res.status >= 300 || !res.json?.access_token) {
+    const body = (res.json ?? {}) as TokenResponse;
+    if (res.status < 200 || res.status >= 300 || !body.access_token) {
       throw new Error(`Token refresh failed (${res.status}): ${res.text}`);
     }
-    return this.toTokenSet(res.json, refreshToken);
+    return this.toTokenSet(body, refreshToken);
   }
 
-  private toTokenSet(body: any, fallbackRefresh: string): TokenSet {
+  private toTokenSet(body: TokenResponse, fallbackRefresh: string): TokenSet {
     return {
-      accessToken: body.access_token,
+      accessToken: body.access_token ?? '',
       refreshToken: body.refresh_token ?? fallbackRefresh,
       expiresAt: Date.now() + Number(body.expires_in ?? 0) * 1000,
     };

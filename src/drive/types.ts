@@ -35,7 +35,7 @@ export interface RequestOptions {
 export interface RequestResponse {
   status: number;
   text: string;
-  json: any;
+  json: unknown;
   arrayBuffer: ArrayBuffer;
 }
 
