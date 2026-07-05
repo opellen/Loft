@@ -2,7 +2,7 @@
 
 # Loft — Upload images to Google Drive and replace local embeds with links
 
-> Paste or drag an image into a note and Loft uploads it to your own Google Drive, then inserts a rendering `![](link)` — keeping your vault light.
+> Paste or drag an image into a note and Loft uploads it to your own Google Drive, then inserts a rendering Markdown image link — keeping your vault light.
 
 ---
 
@@ -17,7 +17,7 @@
 
 ## Features
 
-- **Paste or drag to upload.** Paste or drag an image into a note and it auto-uploads to your Google Drive, then a rendering `![](link)` is inserted at the cursor.
+- **Paste or drag to upload.** Paste or drag an image into a note and it auto-uploads to your Google Drive, then a rendering Markdown image link is inserted at the cursor.
 - **Convert existing local images.** The "Convert local images to Drive links" command — also on the editor right-click menu — converts the local images already embedded in the current note, or only those within your selection.
 - **Plugin-owned destination folder.** Set a folder path (e.g. `Attachments/Images`, using `/` for subfolders); the plugin creates and owns these folders. An optional Parent folder ID nests the path inside an existing Drive folder.
 - **Sign in with Google.** OAuth 2.0 Device Flow works on desktop and mobile — enter a short code at `google.com/device` and you're connected.
@@ -78,17 +78,11 @@ See the step-by-step guide: [docs/reference/google-cloud-setup.md](docs/referenc
 
 ## Compatibility
 
-- Obsidian 1.5.0 or newer.
+- Obsidian 1.6.6 or newer.
 - **Desktop and mobile** (`isDesktopOnly: false`).
 - Notes on mobile:
   - Drag-and-drop does not fire on mobile — use **paste** or the **convert command** instead.
   - The device-code **copy button** may be a no-op on locked-down mobile browsers, but the code itself is selectable so you can copy it manually.
-
----
-
-## Screenshots
-
-Coming soon.
 
 ---
 

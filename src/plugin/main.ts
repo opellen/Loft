@@ -65,7 +65,7 @@ export default class DriveImagesPlugin extends Plugin {
    * shape/signature of the adapter is unchanged.
    */
   getRequest(): RequestFn {
-    const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+    const sleep = (ms: number) => new Promise<void>((r) => window.setTimeout(r, ms));
     return async (opts) => {
       const res = await retryWithBackoff(
         () =>
@@ -103,7 +103,7 @@ export default class DriveImagesPlugin extends Plugin {
       () => this.loadData() as Promise<Settings | null>,
       async (data) => {
         // Keep the in-memory settings and the persisted blob in sync.
-        this.settings = Object.assign({}, DEFAULT_SETTINGS, data) as Settings;
+        this.settings = Object.assign({}, DEFAULT_SETTINGS, data);
         await this.saveData(this.settings);
       },
     );

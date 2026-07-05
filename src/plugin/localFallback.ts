@@ -13,7 +13,7 @@ export async function saveLocalAttachment(
   name: string,
   bytes: ArrayBuffer,
 ): Promise<string> {
-  const path = await app.fileManager.getAvailablePathForAttachment(name, sourceFile?.path);
+  const path = await app.fileManager.getAvailablePathForAttachment(name);
   await app.vault.createBinary(path, bytes);
 
   const slash = path.lastIndexOf('/');

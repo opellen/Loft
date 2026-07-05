@@ -120,7 +120,7 @@ export async function convertLocalImages(
       if (trashed.has(c.tfile.path)) continue;
       trashed.add(c.tfile.path);
       try {
-        await plugin.app.vault.trash(c.tfile, true);
+        await plugin.app.fileManager.trashFile(c.tfile);
       } catch {
         // Best-effort: a failed trash must not undo a successful conversion.
       }

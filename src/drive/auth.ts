@@ -9,7 +9,7 @@ const FORM_CT = 'application/x-www-form-urlencoded';
 /** Delay helper; injectable so tests run without real timers. */
 export type DelayFn = (ms: number) => Promise<void>;
 
-const realDelay: DelayFn = (ms) => new Promise((r) => setTimeout(r, ms));
+const realDelay: DelayFn = (ms) => new Promise((r) => window.setTimeout(r, ms));
 
 function form(params: Record<string, string>): string {
   return Object.entries(params)

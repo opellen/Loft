@@ -33,7 +33,7 @@ export class DataJsonTokenStore implements TokenStore {
   }
 
   async save(t: TokenSet): Promise<void> {
-    const data = (await this.loadData()) ?? ({ tokens: null } as HasTokens);
+    const data: HasTokens = (await this.loadData()) ?? { tokens: null };
     data.tokens = t;
     await this.saveData(data);
   }

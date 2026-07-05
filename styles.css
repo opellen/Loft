@@ -1,1 +1,15 @@
 /* Drive Images plugin styles */
+
+.od-device-code-modal .od-user-code {
+  font-size: 2em;
+  font-weight: bold;
+  letter-spacing: 0.15em;
+  text-align: center;
+  margin: 1em 0;
+  user-select: all;
+}
+
+.od-device-code-modal .od-status {
+  margin-top: 1em;
+  opacity: 0.8;
+}

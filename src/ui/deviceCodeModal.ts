@@ -48,13 +48,7 @@ export class DeviceCodeModal extends Modal {
     p.createEl('a', { text: url, href: url, attr: { target: '_blank', rel: 'noopener' } });
     p.appendText(' and enter this code:');
 
-    const codeEl = contentEl.createEl('div', { text: this.userCode, cls: 'od-user-code' });
-    codeEl.style.fontSize = '2em';
-    codeEl.style.fontWeight = 'bold';
-    codeEl.style.letterSpacing = '0.15em';
-    codeEl.style.textAlign = 'center';
-    codeEl.style.margin = '1em 0';
-    codeEl.style.userSelect = 'all';
+    contentEl.createEl('div', { text: this.userCode, cls: 'od-user-code' });
 
     const btnRow = contentEl.createEl('div', { cls: 'od-btn-row' });
     const copyBtn = btnRow.createEl('button', { text: 'Copy code' });
@@ -73,8 +67,6 @@ export class DeviceCodeModal extends Modal {
       text: 'Waiting for approval…',
       cls: 'od-status',
     });
-    this.statusEl.style.marginTop = '1em';
-    this.statusEl.style.opacity = '0.8';
   }
 
   onClose(): void {

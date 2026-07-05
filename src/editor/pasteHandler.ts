@@ -37,12 +37,14 @@ export function registerImageUploadHandlers(plugin: DriveImagesPlugin): void {
 
   plugin.registerEvent(
     workspace.on('editor-paste', (evt, editor, info) => {
+      if (evt.defaultPrevented) return;
       handleFiles(plugin, evt, editor, info, evt.clipboardData?.files);
     }),
   );
 
   plugin.registerEvent(
     workspace.on('editor-drop', (evt, editor, info) => {
+      if (evt.defaultPrevented) return;
       handleFiles(plugin, evt, editor, info, evt.dataTransfer?.files);
     }),
   );
