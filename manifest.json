@@ -1,0 +1,10 @@
+{
+  "id": "loft",
+  "name": "Loft",
+  "version": "0.1.0",
+  "minAppVersion": "1.5.0",
+  "description": "Upload images to Google Drive and replace local embeds with links.",
+  "author": "San",
+  "authorUrl": "https://github.com/opellen",
+  "isDesktopOnly": false
+}
